@@ -1,0 +1,53 @@
+﻿@page
+@model CreateOrderModel
+@{
+    ViewData["Title"] = "Оформлення замовлення";
+}
+
+<h2>Оформити замовлення</h2>
+
+<form method="post" class="mt-4">
+
+    @if (!ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            Будь ласка, перевірте правильність введених даних.
+        </div>
+    }
+
+    <div class="mb-3">
+        <label class="form-label">Ваше ім'я</label>
+        <input asp-for="Order.CustomerName" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Контактні дані (телефон або email)</label>
+        <input asp-for="Order.CustomerContact" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Побажання щодо дизайну</label>
+        <textarea asp-for="Order.Description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="mb-3 form-check">
+        <input asp-for="Order.IsCustomDesignOrder" class="form-check-input" type="checkbox" />
+        <label class="form-check-label">
+            Це повністю індивідуальне замовлення ("під ключ")
+        </label>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Оберіть послугу з каталогу</label>
+        <select asp-for="Order.DesignServiceId" class="form-select">
+            <option value="">-- Оберіть послугу --</option>
+            @foreach (var service in Model.AvailableServices)
+            {
+                <option value="@service.Id">@service.Name (@service.BasePrice грн)</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Відправити замовлення</button>
+    <a asp-page="/Index" class="btn btn-secondary">Повернутися</a>
+</form>

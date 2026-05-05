@@ -1,0 +1,46 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Наші послуги";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Студія Дизайну</h1>
+    <p>Ознайомтеся з нашими послугами або замовте дизайн "під ключ".</p>
+</div>
+
+<table class="table table-striped mt-4">
+    <thead class="table-dark">
+        <tr>
+            <th>Послуга</th>
+            <th>Опис</th>
+            <th>Базова вартість</th>
+            <th>Тип</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Services)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@(item.IsCustom ? "Договірна" : $"{item.BasePrice} грн")</td>
+                <td>
+                    @if (item.IsCustom)
+                    {
+                        <span class="badge bg-warning text-dark">Під ключ</span>
+                    }
+                    else
+                    {
+
+                        <span class="badge bg-info text-dark">Стандарт</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="mt-4">
+    <a asp-page="/CreateOrder" class="btn btn-primary btn-lg">Оформити замовлення</a>
+</div>
