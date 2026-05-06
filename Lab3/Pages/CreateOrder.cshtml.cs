@@ -1,46 +1,39 @@
-using BLL.DTOs;
+﻿using BLL.DTOs;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace PL.Pages
 {
-    public class CreateOrderModel : PageModel
+    public class CreateOrderModel(IStudioService studioService) : PageModel
     {
-        private readonly IStudioService _studioService;
-
         [BindProperty]
         public OrderDTO Order { get; set; } = new OrderDTO();
 
-        public IEnumerable<DesignServiceDTO> AvailableServices { get; set; } = new List<DesignServiceDTO>();
-
-        public CreateOrderModel(IStudioService studioService)
-        {
-            _studioService = studioService;
-        }
+        public IEnumerable<DesignServiceDTO> AvailableServices { get; set; } = [];
 
         public void OnGet()
         {
-            AvailableServices = _studioService.GetServices().Where(s => !s.IsCustom);
+            AvailableServices = studioService.GetServices();
         }
 
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
-                AvailableServices = _studioService.GetServices().Where(s => !s.IsCustom);
+                AvailableServices = studioService.GetServices();
                 return Page();
             }
 
             try
             {
-                _studioService.MakeOrder(Order);
+                studioService.MakeOrder(Order);
                 return RedirectToPage("/Success");
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
-                AvailableServices = _studioService.GetServices().Where(s => !s.IsCustom);
+                AvailableServices = studioService.GetServices();
                 return Page();
             }
         }

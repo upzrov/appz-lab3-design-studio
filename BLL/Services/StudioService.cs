@@ -14,11 +14,45 @@ namespace BLL.Services
             return mapper.Map<IEnumerable<DesignServiceDTO>>(services);
         }
 
+        public IEnumerable<OrderDTO> GetOrders()
+        {
+            var orders = uow.GetRepository<Order>().GetAll();
+            var orderDtos = mapper.Map<IEnumerable<OrderDTO>>(orders).ToList();
+
+            var services = uow.GetRepository<DesignService>().GetAll().ToList();
+
+            foreach (var dto in orderDtos)
+            {
+                if (dto.DesignServiceId.HasValue)
+                {
+                    var service = services.FirstOrDefault(s => s.Id == dto.DesignServiceId.Value);
+                    if (service != null)
+                    {
+                        dto.ServiceName = service.Name;
+                    }
+                }
+            }
+
+            return orderDtos;
+        }
+
         public void MakeOrder(OrderDTO orderDto)
         {
-            if (!orderDto.IsCustomDesignOrder && orderDto.DesignServiceId == null)
+            if (!string.IsNullOrEmpty(orderDto.ServiceName) && orderDto.DesignServiceId == null)
             {
-                throw new ArgumentException("Для замовлення з каталогу необхідно вибрати послугу.");
+                var service = uow.GetRepository<DesignService>()
+                                 .GetAll()
+                                 .FirstOrDefault(s => s.Name == orderDto.ServiceName);
+
+                if (service != null)
+                {
+                    orderDto.DesignServiceId = service.Id;
+                }
+            }
+
+            if (orderDto.DesignServiceId == null)
+            {
+                throw new ArgumentException("Для замовлення необхідно вибрати послугу.");
             }
 
             var order = mapper.Map<Order>(orderDto);
