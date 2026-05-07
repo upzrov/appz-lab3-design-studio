@@ -29,23 +29,55 @@ var app = builder.Build();
 // Seed initial data
 using (var scope = app.Services.CreateScope())
 {
-    var service = scope.ServiceProvider.GetRequiredService<IStudioService>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<DesignStudioDbContext>();
+    dbContext.Database.EnsureCreated();
 
-    if (!service.GetServices().Any())
+    if (!dbContext.DesignServices.Any())
     {
-        service.AddService(new BLL.DTOs.DesignServiceDTO { Name = "Дизайн Landing Page", Description = "Створення UI/UX односторінкового сайту для продажів", BasePrice = 6000, IsCustom = false });
-        service.AddService(new BLL.DTOs.DesignServiceDTO { Name = "Дизайн корпоративного сайту", Description = "Багатосторінковий сайт для компанії (до 10 сторінок)", BasePrice = 15000, IsCustom = false });
-        service.AddService(new BLL.DTOs.DesignServiceDTO { Name = "Інтернет-магазин \"під ключ\"", Description = "Комплексний дизайн e-commerce проєкту з унікальним функціоналом", BasePrice = 0, IsCustom = true });
+        var webDesign = new DesignService { Name = "Дизайн сайту", Description = "Створення UI/UX сайту", BasePrice = 5000, IsCustom = false };
+        var interiorDesign = new DesignService { Name = "Дизайн інтер'єру", Description = "Дизайн кімнати", BasePrice = 15000, IsCustom = false };
 
-        service.AddService(new BLL.DTOs.DesignServiceDTO { Name = "Розробка логотипу", Description = "Створення унікального логотипу (3 концепти)", BasePrice = 4000, IsCustom = false });
-        service.AddService(new BLL.DTOs.DesignServiceDTO { Name = "Базовий фірмовий стиль", Description = "Логотип, кольорова палітра, шрифти та візитки", BasePrice = 8000, IsCustom = false });
-        service.AddService(new BLL.DTOs.DesignServiceDTO { Name = "Комплексний брендинг / Брендбук", Description = "Глобальна розробка айдентики компанії \"під ключ\"", BasePrice = 0, IsCustom = true });
+        var services = new List<DesignService>
+        {
+            webDesign,
+            interiorDesign,
+            new() { Name = "Дизайн Landing Page", Description = "Створення UI/UX односторінкового сайту", BasePrice = 6000, IsCustom = false },
+            new() { Name = "Дизайн корпоративного сайту", Description = "Багатосторінковий сайт для компанії", BasePrice = 15000, IsCustom = false },
+            new() { Name = "Інтернет-магазин \"під ключ\"", Description = "Комплексний дизайн e-commerce", BasePrice = 0, IsCustom = true },
+            new() { Name = "Розробка логотипу", Description = "Створення унікального логотипу", BasePrice = 4000, IsCustom = false },
+            new() { Name = "Базовий фірмовий стиль", Description = "Логотип, кольорова палітра, шрифти", BasePrice = 8000, IsCustom = false },
+            new() { Name = "Комплексний брендинг", Description = "Айдентика компанії \"під ключ\"", BasePrice = 0, IsCustom = true },
+            new() { Name = "UI/UX аудит", Description = "Аналіз інтерфейсу та звіт", BasePrice = 3000, IsCustom = false },
+            new() { Name = "Дизайн мобільного додатку", Description = "Проєктування для iOS та Android", BasePrice = 0, IsCustom = true },
+            new() { Name = "Оформлення соц. мереж", Description = "Шаблони для Instagram/Facebook", BasePrice = 3500, IsCustom = false },
+            new() { Name = "Креативи для реклами", Description = "Пакет з 5 статичних банерів", BasePrice = 1500, IsCustom = false }
+        };
 
-        service.AddService(new BLL.DTOs.DesignServiceDTO { Name = "UI/UX аудит існуючого продукту", Description = "Аналіз інтерфейсу та звіт з рекомендаціями", BasePrice = 3000, IsCustom = false });
-        service.AddService(new BLL.DTOs.DesignServiceDTO { Name = "Дизайн мобільного додатку \"під ключ\"", Description = "Проєктування додатку для iOS та Android з нуля", BasePrice = 0, IsCustom = true });
+        dbContext.DesignServices.AddRange(services);
+        dbContext.SaveChanges();
 
-        service.AddService(new BLL.DTOs.DesignServiceDTO { Name = "Оформлення соціальних мереж", Description = "Шаблони для Instagram/Facebook (пости, сторіз, аватар)", BasePrice = 3500, IsCustom = false });
-        service.AddService(new BLL.DTOs.DesignServiceDTO { Name = "Креативи для таргетованої реклами", Description = "Пакет з 5 статичних банерів", BasePrice = 1500, IsCustom = false });
+        dbContext.PortfolioItems.AddRange(
+            new PortfolioItem
+            {
+                Title = "Сайт для інтернет-магазину",
+                ImageUrl = "https://fastly.picsum.photos/id/2/5000/3333.jpg?hmac=_KDkqQVttXw_nM-RyJfLImIbafFrqLsuGO5YuHqD-qQ",
+                DesignServiceId = webDesign.Id
+            },
+            new PortfolioItem
+            {
+                Title = "Корпоративний портал",
+                ImageUrl = "https://fastly.picsum.photos/id/60/1920/1200.jpg?hmac=fAMNjl4E_sG_WNUjdU39Kald5QAHQMh-_-TsIbbeDNI",
+                DesignServiceId = webDesign.Id
+            },
+            new PortfolioItem
+            {
+                Title = "Мобільний застосунок",
+                ImageUrl = "https://fastly.picsum.photos/id/160/3200/2119.jpg?hmac=cz68HnnDt3XttIwIFu5ymcvkCp-YbkEBAM-Zgq-4DHE",
+                DesignServiceId = interiorDesign.Id
+            }
+        );
+
+        dbContext.SaveChanges();
     }
 }
 

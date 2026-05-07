@@ -6,6 +6,7 @@ namespace BLL.Interfaces
     {
         IEnumerable<DesignServiceDTO> GetServices();
         IEnumerable<OrderDTO> GetOrders();
+        IEnumerable<PortfolioItemDTO> GetPortfolioItems();
 
         void MakeOrder(OrderDTO orderDto);
         void AddService(DesignServiceDTO serviceDto);

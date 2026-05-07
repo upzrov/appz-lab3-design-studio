@@ -14,6 +14,7 @@ namespace BLL.Mappings
                     src.DesignService != null ? src.DesignService.Name : string.Empty));
             CreateMap<OrderDTO, Order>()
                 .ForMember(dest => dest.DesignService, opt => opt.Ignore());
+            CreateMap<DAL.Models.PortfolioItem, PortfolioItemDTO>().ReverseMap();
         }
     }
 }

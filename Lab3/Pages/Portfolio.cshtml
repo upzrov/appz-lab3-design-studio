@@ -1,0 +1,24 @@
+﻿@page
+@model PL.Pages.PortfolioModel
+@{
+    ViewData["Title"] = "Наше Портфоліо";
+}
+
+<div class="text-center mb-4">
+    <h1>Наші роботи</h1>
+    <p>Ознайомтеся з проектами, які ми вже реалізували.</p>
+</div>
+
+<div class="row">
+    @foreach (var item in Model.PortfolioItems)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Title" style="object-fit: cover; height: 200px;">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Title</h5>
+                </div>
+            </div>
+        </div>
+    }
+</div>

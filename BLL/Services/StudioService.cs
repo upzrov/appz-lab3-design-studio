@@ -36,6 +36,12 @@ namespace BLL.Services
             return orderDtos;
         }
 
+        public IEnumerable<PortfolioItemDTO> GetPortfolioItems()
+        {
+            var items = uow.GetRepository<PortfolioItem>().GetAll();
+            return mapper.Map<IEnumerable<PortfolioItemDTO>>(items);
+        }
+
         public void MakeOrder(OrderDTO orderDto)
         {
             if (!string.IsNullOrEmpty(orderDto.ServiceName) && orderDto.DesignServiceId == null)
