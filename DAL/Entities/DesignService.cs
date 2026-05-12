@@ -1,5 +1,4 @@
-﻿using System;
-namespace DAL.Models
+﻿namespace DAL.Entities
 {
     public class DesignService
     {

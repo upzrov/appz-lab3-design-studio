@@ -1,34 +1,32 @@
-﻿@page
-@model OrdersModel
+﻿@model IEnumerable<BLL.DTOs.DesignServiceDTO>
 @{
-    ViewData["Title"] = "Список замовлень";
+    ViewData["Title"] = "Наші послуги";
 }
 
-<div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-    <h3 class="text-primary mb-0">Всі замовлення</h3>
+<div class="mb-4 mt-3">
+    <h2 class="text-primary">Студія Дизайну</h2>
+    <p class="text-muted">Ознайомтеся з нашими послугами або замовте дизайн "під ключ".</p>
 </div>
 
 <div class="table-responsive rounded border mb-4">
     <table class="table table-hover align-middle mb-0">
         <thead class="table-primary">
             <tr>
-                <th class="py-2 px-3">Ім'я клієнта</th>
-                <th class="py-2 px-3">Контакти</th>
                 <th class="py-2 px-3">Послуга</th>
                 <th class="py-2 px-3">Опис</th>
+                <th class="py-2 px-3">Базова вартість</th>
                 <th class="py-2 px-3 text-center">Тип</th>
             </tr>
         </thead>
         <tbody class="bg-white">
-            @foreach (var order in Model.Orders)
+            @foreach (var item in Model)
             {
                 <tr>
-                    <td class="py-2 px-3 fw-semibold">@order.CustomerName</td>
-                    <td class="py-2 px-3">@order.CustomerContact</td>
-                    <td class="py-2 px-3">@order.ServiceName</td>
-                    <td class="py-2 px-3 text-muted">@order.Description</td>
+                    <td class="py-2 px-3 fw-semibold">@item.Name</td>
+                    <td class="py-2 px-3 text-muted">@item.Description</td>
+                    <td class="py-2 px-3 text-success">@(item.IsCustom ? "Договірна" : $"{item.BasePrice} грн")</td>
                     <td class="py-2 px-3 text-center">
-                        @if (order.IsCustomDesignOrder)
+                        @if (item.IsCustom)
                         {
                             <span class="badge bg-warning text-dark rounded">Під ключ</span>
                         }
@@ -41,4 +39,8 @@
             }
         </tbody>
     </table>
+</div>
+
+<div class="mb-4">
+    <a asp-controller="Orders" asp-action="Create" class="btn btn-primary rounded">Оформити замовлення</a>
 </div>

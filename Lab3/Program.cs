@@ -1,32 +1,38 @@
 ﻿using BLL.Interfaces;
-using BLL.Mappings;
 using BLL.Services;
 using DAL.Interfaces;
-using DAL.Models;
+using DAL.Entities;
 using DAL.UoW;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorPages();
-
 builder.Services.AddDbContext<DesignStudioDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Data Access Layer
+// Dependency Injection
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-// Business Logic Layer
 builder.Services.AddScoped<IStudioService, StudioService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<BLL.Mappings.MappingProfile>();
 });
 
+builder.Services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", options =>
+    {
+        options.LoginPath = "/Auth/Login";
+        options.AccessDeniedPath = "/Auth/AccessDenied";
+    });
+builder.Services.AddAuthorization();
+
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+
 var app = builder.Build();
 
-// Seed initial data
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<DesignStudioDbContext>();
@@ -78,22 +84,29 @@ using (var scope = app.Services.CreateScope())
         );
 
         dbContext.SaveChanges();
+
+        var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
+        authService.RegisterUser("admin", "1488", "Admin");
     }
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
-// Route Razor Pages
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Run();

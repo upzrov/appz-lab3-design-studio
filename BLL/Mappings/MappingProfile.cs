@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DTOs;
-using DAL.Models;
+using DAL.Entities;
 
 namespace BLL.Mappings
 {
@@ -14,7 +14,7 @@ namespace BLL.Mappings
                     src.DesignService != null ? src.DesignService.Name : string.Empty));
             CreateMap<OrderDTO, Order>()
                 .ForMember(dest => dest.DesignService, opt => opt.Ignore());
-            CreateMap<DAL.Models.PortfolioItem, PortfolioItemDTO>().ReverseMap();
+            CreateMap<PortfolioItem, PortfolioItemDTO>().ReverseMap();
         }
     }
 }

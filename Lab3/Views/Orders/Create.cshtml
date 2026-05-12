@@ -1,31 +1,31 @@
-﻿@page
-@model PL.Pages.CreateOrderModel
+﻿@model BLL.DTOs.OrderDTO
 @{
     ViewData["Title"] = "Оформлення замовлення";
+    var services = ViewBag.AvailableServices as IEnumerable<BLL.DTOs.DesignServiceDTO> ?? new List<BLL.DTOs.DesignServiceDTO>();
 }
 
 <div class="mt-4 mb-4" style="max-width: 600px;">
     <h3 class="text-primary mb-3">Оформлення замовлення</h3>
 
     <div class="border rounded p-4 bg-white">
-        <form method="post" id="orderForm">
+        <form asp-action="Create" asp-controller="Orders" method="post" id="orderForm">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <div class="mb-3">
-                <label asp-for="Order.CustomerName" class="form-label">Ваше ім'я</label>
-                <input asp-for="Order.CustomerName" class="form-control rounded" required />
+                <label asp-for="CustomerName" class="form-label">Ваше ім'я</label>
+                <input asp-for="CustomerName" class="form-control rounded" required />
             </div>
 
             <div class="mb-3">
-                <label asp-for="Order.CustomerContact" class="form-label">Контактні дані</label>
-                <input asp-for="Order.CustomerContact" class="form-control rounded" required />
+                <label asp-for="CustomerContact" class="form-label">Контактні дані</label>
+                <input asp-for="CustomerContact" class="form-control rounded" required />
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Оберіть послугу</label>
 
-                <input type="hidden" asp-for="Order.IsCustomDesignOrder" id="hiddenIsCustom" value="false" />
-                <input type="hidden" asp-for="Order.ServiceName" id="hiddenServiceName" />
+                <input type="hidden" asp-for="IsCustomDesignOrder" id="hiddenIsCustom" value="false" />
+                <input type="hidden" asp-for="ServiceName" id="hiddenServiceName" />
 
                 <ul class="nav nav-tabs" id="serviceTabs" role="tablist">
                     <li class="nav-item" role="presentation">
@@ -41,7 +41,7 @@
                     <div class="tab-pane fade show active" id="standard-pane" role="tabpanel">
                         <select class="form-select rounded" id="standardSelect">
                             <option value="">Оберіть послугу</option>
-                            @foreach (var service in Model.AvailableServices.Where(s => !s.IsCustom))
+                            @foreach (var service in services.Where(s => !s.IsCustom))
                             {
                                 <option value="@service.Name">@service.Name (@service.BasePrice грн)</option>
                             }
@@ -51,7 +51,7 @@
                     <div class="tab-pane fade" id="custom-pane" role="tabpanel">
                         <select class="form-select rounded" id="customSelect">
                             <option value="">Оберіть послугу</option>
-                            @foreach (var service in Model.AvailableServices.Where(s => s.IsCustom))
+                            @foreach (var service in services.Where(s => s.IsCustom))
                             {
                                 <option value="@service.Name">@service.Name (Договірна)</option>
                             }
@@ -63,13 +63,13 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="Order.Description" class="form-label">Деталі замовлення (опис)</label>
-                <textarea asp-for="Order.Description" class="form-control rounded" rows="3" required></textarea>
+                <label asp-for="Description" class="form-label">Деталі замовлення (опис)</label>
+                <textarea asp-for="Description" class="form-control rounded" rows="3" required></textarea>
             </div>
 
             <div class="mt-4">
                 <button type="submit" class="btn btn-primary rounded me-2">Підтвердити замовлення</button>
-                <a asp-page="/Index" class="btn btn-secondary rounded">Скасувати</a>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary rounded">Скасувати</a>
             </div>
         </form>
     </div>

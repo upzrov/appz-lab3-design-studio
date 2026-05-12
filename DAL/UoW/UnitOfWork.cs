@@ -1,5 +1,5 @@
 ﻿using DAL.Interfaces;
-using DAL.Models;
+using DAL.Entities;
 using DAL.Repositories;
 
 namespace DAL.UoW
