@@ -9,6 +9,18 @@
     <p>Ознайомтеся з проектами, які ми вже реалізували.</p>
 </div>
 
+
+<div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+    <h2 class="text-primary m-0">Наші роботи</h2>
+
+    @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <a asp-controller="Portfolio" asp-action="Create" class="btn btn-success rounded shadow-sm">
+            + Додати роботу
+        </a>
+    }
+</div>
+
 <div class="row">
     @foreach (var item in Model.PortfolioItems)
     {

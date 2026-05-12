@@ -8,7 +8,7 @@ namespace BLL.Services
 {
     public class StudioService(IUnitOfWork uow, IMapper mapper) : IStudioService
     {
-        public IEnumerable<DesignServiceDTO> GetServices()
+        public IEnumerable<DesignServiceDTO> GetAllServices()
         {
             var services = uow.GetRepository<DesignService>().GetAll();
             return mapper.Map<IEnumerable<DesignServiceDTO>>(services);
@@ -72,6 +72,13 @@ namespace BLL.Services
         {
             var service = mapper.Map<DesignService>(serviceDto);
             uow.GetRepository<DesignService>().Create(service);
+            uow.Save();
+        }
+
+        public void CreatePortfolioItem(PortfolioItemDTO itemDto)
+        {
+            var item = mapper.Map<PortfolioItem>(itemDto);
+            uow.GetRepository<PortfolioItem>().Create(item);
             uow.Save();
         }
     }

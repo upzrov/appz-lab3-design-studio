@@ -1,0 +1,45 @@
+﻿@model BLL.DTOs.PortfolioItemDTO
+@{
+    ViewData["Title"] = "Додати в портфоліо";
+    var services = ViewBag.Services as IEnumerable<BLL.DTOs.DesignServiceDTO> ?? new List<BLL.DTOs.DesignServiceDTO>();
+}
+
+<div class="mt-4 mb-4 mx-auto" style="max-width: 600px;">
+    <h3 class="text-primary mb-3">Додати роботу в портфоліо</h3>
+
+    <div class="border rounded p-4 bg-white shadow-sm">
+        <form asp-action="Create" asp-controller="Portfolio" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label">Назва роботи</label>
+                <input asp-for="Title" class="form-control rounded" required placeholder="Наприклад: Дизайн сайту для кав'ярні" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImageUrl" class="form-label">URL зображення</label>
+                <input asp-for="ImageUrl" class="form-control rounded" required placeholder="https://..." />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <div class="form-text">Вставте пряме посилання на зображення.</div>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="DesignServiceId" class="form-label">Пов'язана послуга</label>
+                <select asp-for="DesignServiceId" class="form-select rounded" required>
+                    <option value="">-- Оберіть послугу --</option>
+                    @foreach (var service in services)
+                    {
+                        <option value="@service.Id">@service.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="DesignServiceId" class="text-danger"></span>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary rounded me-2">Зберегти роботу</button>
+                <a asp-page="/Portfolio" class="btn btn-secondary rounded">Скасувати</a>
+            </div>
+        </form>
+    </div>
+</div>

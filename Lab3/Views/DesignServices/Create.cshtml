@@ -1,0 +1,66 @@
+﻿@model BLL.DTOs.DesignServiceDTO
+@{
+    ViewData["Title"] = "Додавання нової послуги";
+}
+
+<div class="mt-4 mb-4 mx-auto" style="max-width: 600px;">
+    <h3 class="text-primary mb-3">Додати нову послугу</h3>
+
+    <div class="border rounded p-4 bg-white shadow-sm">
+        <form asp-action="Create" asp-controller="DesignServices" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Назва послуги</label>
+                <input asp-for="Name" class="form-control rounded" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Опис послуги</label>
+                <textarea asp-for="Description" class="form-control rounded" rows="3" required></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <div class="form-check form-switch mt-3 mb-2">
+                    <input class="form-check-input" type="checkbox" asp-for="IsCustom" id="isCustomSwitch">
+                    <label class="form-check-label" asp-for="IsCustom">
+                        Послуга "під ключ" (ціна договірна)
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-3" id="priceContainer">
+                <label asp-for="BasePrice" class="form-label">Базова ціна (грн)</label>
+                <input asp-for="BasePrice" type="number" step="0.01" class="form-control rounded" />
+                <span asp-validation-for="BasePrice" class="text-danger"></span>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary rounded me-2">Зберегти послугу</button>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary rounded">Скасувати</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const isCustomSwitch = document.getElementById("isCustomSwitch");
+        const priceContainer = document.getElementById("priceContainer");
+        const priceInput = document.getElementById("BasePrice");
+
+        function togglePrice() {
+            if (isCustomSwitch.checked) {
+                priceContainer.style.display = "none";
+                priceInput.value = 0;
+            } else {
+                priceContainer.style.display = "block";
+            }
+        }
+
+        isCustomSwitch.addEventListener("change", togglePrice);
+        togglePrice();
+    });
+</script>

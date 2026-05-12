@@ -7,7 +7,7 @@ namespace PL.Controllers
     {
         public IActionResult Index()
         {
-            var services = studioService.GetServices();
+            var services = studioService.GetAllServices();
             return View(services);
         }
     }

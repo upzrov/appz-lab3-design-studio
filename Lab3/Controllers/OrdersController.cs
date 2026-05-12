@@ -10,7 +10,7 @@ namespace PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.AvailableServices = studioService.GetServices();
+            ViewBag.AvailableServices = studioService.GetAllServices();
             return View(new OrderDTO());
         }
 
@@ -19,7 +19,7 @@ namespace PL.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.AvailableServices = studioService.GetServices();
+                ViewBag.AvailableServices = studioService.GetAllServices();
                 return View(order);
             }
 
@@ -31,7 +31,7 @@ namespace PL.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
-                ViewBag.AvailableServices = studioService.GetServices();
+                ViewBag.AvailableServices = studioService.GetAllServices();
                 return View(order);
             }
         }
